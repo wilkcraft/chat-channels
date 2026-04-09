@@ -1,0 +1,9 @@
+name: Chat-Channels
+version: 1.2.5
+main: com.chatChannels.ChatChannels
+api-version: 1.21
+author: Wilkcraft
+
+commands:
+  channel:
+    description: Switch chat channel
