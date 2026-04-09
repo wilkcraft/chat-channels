@@ -1,0 +1,29 @@
+# =========================================
+# Chat-Channels Configuration
+# =========================================
+
+# You can create as many channels as you want.
+# Each channel needs:
+# - prefix: how it appears in-game
+# - webhook: Discord webhook URL (optional, but must exist even if empty)
+
+channels:
+  # =========================================
+  # GLOBAL CHANNEL
+  # =========================================
+  # This is the DEFAULT Minecraft chat.
+  # - Uses vanilla Minecraft chat system
+  # - Automatically assigned to players
+  # - No custom formatting in-game
+  # - Discord webhook is OPTIONAL
+  global:
+    prefix: "[Global]"
+    webhook: ""
+
+  # =========================================
+  # STAFF CHANNEL
+  # =========================================
+  # Only OP players can use this channel
+  staff:
+    prefix: "[Staff]"
+    webhook: "URL_WEBHOOK_STAFF"
