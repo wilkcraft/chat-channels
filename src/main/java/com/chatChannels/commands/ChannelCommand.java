@@ -15,8 +15,40 @@ public class ChannelCommand implements CommandExecutor {
     if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 
       if (!(sender instanceof Player) || sender.isOp()) {
-        ChatChannels.getInstance().reloadConfig();
-        sender.sendMessage("§aConfig reloaded successfully.");
+
+        ChatChannels plugin = ChatChannels.getInstance();
+
+        // 📌 Get current token BEFORE reloading config
+        String oldToken = plugin.getConfig().getString("discord.token");
+
+        // 🔁 Reload configuration file
+        plugin.reloadConfig();
+
+        // 📌 Get new token AFTER reload
+        String newToken = plugin.getConfig().getString("discord.token");
+
+        // 🔍 Check if token has changed
+        boolean tokenChanged = (oldToken == null && newToken != null) ||
+            (oldToken != null && !oldToken.equals(newToken));
+
+        if (tokenChanged) {
+
+          // 🔴 Shutdown current Discord bot (if running)
+          com.chatChannels.discord.DiscordBot.shutdown();
+
+          // 🔁 Start bot again only if new token exists
+          if (newToken != null && !newToken.isEmpty()) {
+            com.chatChannels.discord.DiscordBot.startBot(plugin, newToken);
+            sender.sendMessage("§aConfig and Discord bot reloaded.");
+          } else {
+            sender.sendMessage("§eConfig reloaded (Discord bot disabled).");
+          }
+
+        } else {
+          // ✅ Token unchanged → no need to restart bot
+          sender.sendMessage("§aConfig reloaded successfully.");
+        }
+
       } else {
         sender.sendMessage("You don't have permission.");
       }
