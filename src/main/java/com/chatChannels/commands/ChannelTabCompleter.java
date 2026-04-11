@@ -44,4 +44,3 @@ public class ChannelTabCompleter implements TabCompleter {
 
     return completions;
   }
-}
