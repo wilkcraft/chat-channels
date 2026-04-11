@@ -1,13 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://www.m
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.apache.org/xsd/maven-4.0.0.xsd">
 
-aven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.chatChannels</groupId>
     <artifactId>Chat-Channels</artifactId>
-    <version>1.2.5</version>
+    <version>1.3.2</version>
     <packaging>jar</packaging>
 
     <name>Chat-Channels</name>
@@ -20,21 +18,33 @@ aven.apache.org/xsd/maven-4.0.0.xsd">
     </repositories>
 
     <dependencies>
+        <!-- Paper API -->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Discord Webhooks -->
         <dependency>
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
             <version>0.8.2</version>
         </dependency>
+
+        <!-- JDA (Discord Bot) -->
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-beta.20</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+
+            <!-- Java version -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -44,6 +54,40 @@ aven.apache.org/xsd/maven-4.0.0.xsd">
                     <target>21</target>
                 </configuration>
             </plugin>
+
+            <!-- 🔥 SHADE (VERY IMPORTANT) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+
+                            <!-- Avoid conflicts with other plugins -->
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.dv8tion.jda</pattern>
+                                    <shadedPattern>com.chatChannels.libs.jda</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>club.minnced</pattern>
+                                    <shadedPattern>com.chatChannels.libs.webhooks</shadedPattern>
+                                </relocation>
+                            </relocations>
+
+                            <!-- Remove unused files === false -->
+                            <minimizeJar>false</minimizeJar>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
