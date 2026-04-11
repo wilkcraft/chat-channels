@@ -2,6 +2,9 @@
 # Chat-Channels Configuration
 # =========================================
 
+discord:
+  token: "" # Put your bot token here (optional)
+
 # You can create as many channels as you want.
 # Each channel needs:
 # - prefix: how it appears in-game
@@ -18,7 +21,8 @@ channels:
   # - Discord webhook is OPTIONAL
   global:
     prefix: "[Global]"
-    webhook: ""
+    webhook: "" # Optional
+    discord-channel-id: "" # Optional
 
   # =========================================
   # STAFF CHANNEL
@@ -26,4 +30,5 @@ channels:
   # Only OP players can use this channel
   staff:
     prefix: "[Staff]"
-    webhook: "URL_WEBHOOK_STAFF"
+    webhook: "URL_WEBHOOK_STAFF" # Optional
+    discord-channel-id: "" # Optional
