@@ -15,6 +15,14 @@ public class ChatChannels extends JavaPlugin {
 
     saveDefaultConfig();
 
+    String token = getConfig().getString("discord.token");
+
+    if (token != null && !token.isEmpty()) {
+      com.chatChannels.discord.DiscordBot.startBot(this, token);
+    } else {
+      getLogger().info("Discord bot not enabled (no token provided).");
+    }
+
     getServer().getPluginManager().registerEvents(new ChatListener(), this);
 
     getCommand("channel").setExecutor(new ChannelCommand());
