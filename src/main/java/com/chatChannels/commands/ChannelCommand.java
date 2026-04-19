@@ -85,8 +85,21 @@ public class ChannelCommand implements CommandExecutor {
     }
 
     ChannelManager.setChannel(player, channel);
+    clearChat(player);
     player.sendMessage("§aYou are now in channel: §e" + channel + "§r");
 
+    player.sendMessage("§7--- Chat history ---");
+
+    for (net.kyori.adventure.text.Component msg : ChannelManager.getMessages(channel)) {
+      player.sendMessage(msg);
+    }
+
     return true;
+  }
+
+  public static void clearChat(Player player) {
+    for (int i = 0; i < 100; i++) {
+      player.sendMessage("");
+    }
   }
 }
