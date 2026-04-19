@@ -15,9 +15,24 @@ Perfect for servers that want organized communication between players, staff, an
 * 🌐 Discord webhook integration (Minecraft → Discord)
 * 🤖 Discord bot integration (Discord → Minecraft)
 * 🔗 Channel linking via Discord channel IDs
+* 🧑 Player avatars in Discord messages (webhooks)
+* 🎨 Full color support (including HEX colors)
+* 🧩 Optional Vault integration (prefix & suffix support)
 * 🔄 Hot reload with automatic bot restart
 * ⚡ Lightweight and efficient
 * 📡 Global chat with vanilla behavior
+
+---
+
+## 🧩 Vault Support (Optional)
+
+If Vault is installed (e.g. with LuckPerms):
+
+* Player prefixes & suffixes are automatically applied
+* Color formatting is preserved correctly
+* Enhances chat formatting without additional configuration
+
+If Vault is not installed, the plugin works normally without prefixes/suffixes.
 
 ---
 
@@ -108,6 +123,8 @@ channels:
 * 🌐 `webhook` → Sends messages to Discord (optional)
 * 🤖 `discord-channel-id` → Receives messages from Discord (optional)
 * 🔑 `discord.token` → Enables Discord bot (optional)
+* 🎨 Supports HEX colors (e.g. `&#FFAA00`)
+* 🌐 Colors are automatically stripped/cleaned when sending to Discord
 
 ---
 
@@ -115,13 +132,15 @@ channels:
 
 ### Webhooks (Minecraft → Discord)
 
-* Send messages from Minecraft to Discord
+* Sends messages from Minecraft to Discord
+* Includes player avatar, name, and clean formatting
 * One webhook per channel
-* Uses embed formatting
+* Color codes are cleaned automatically
 
 ### Bot (Discord → Minecraft)
 
 * Sync messages from Discord to Minecraft
+* Display format: `Discord [username]: message`
 * Works per configured channel
 * Requires bot token
 
@@ -139,16 +158,15 @@ channels:
 ### 2️⃣ Create Bot
 
 * Go to **Bot** tab
-
 * Click **Add Bot**
 
-* Enable:
+Enable:
 
-  * ✅ Public Bot
-  * ✅ Server Members Intent
-  * ✅ Message Content Intent
+* ✅ Public Bot
+* ✅ Server Members Intent
+* ✅ Message Content Intent
 
-* Copy token and paste in config:
+Paste token in config:
 
 ```yaml
 discord:
@@ -223,7 +241,7 @@ mvn clean package
 The compiled plugin will appear in:
 
 ```
-target/Chat-Channels-1.3.2.jar
+target/Chat-Channels-1.4.0.jar
 ```
 
 ---
