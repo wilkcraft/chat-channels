@@ -8,6 +8,16 @@ public class DiscordWebhook {
 
   private final String url;
   private String content;
+  private String username;
+  private String avatarUrl;
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setAvatarUrl(String avatarUrl) {
+    this.avatarUrl = avatarUrl;
+  }
 
   public DiscordWebhook(String url) {
     this.url = url;
@@ -31,11 +41,9 @@ public class DiscordWebhook {
         .replace("\n", "\\n");
 
     String json = "{"
-        + "\"embeds\": [{"
-        + "\"title\": \"" + safeContent.split(":")[0] + "\","
-        + "\"description\": \"" + safeContent.substring(safeContent.indexOf(":") + 2) + "\","
-        + "\"color\": 5814783"
-        + "}]"
+        + "\"content\": \"" + safeContent + "\","
+        + "\"username\": \"" + (username != null ? username : "Minecraft") + "\","
+        + "\"avatar_url\": \"" + (avatarUrl != null ? avatarUrl : "") + "\""
         + "}";
 
     OutputStream stream = conn.getOutputStream();
