@@ -2,10 +2,13 @@ package com.chatChannels.discord;
 
 import com.chatChannels.ChatChannels;
 import com.chatChannels.chat.ChannelManager;
+import com.chatChannels.utils.ColorUtils;
+
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import net.kyori.adventure.text.Component;
 
 public class DiscordListener extends ListenerAdapter {
 
@@ -35,15 +38,13 @@ public class DiscordListener extends ListenerAdapter {
       if (!configId.equals(discordChannelId))
         continue;
 
-      String prefix = config.getString("channels." + channel + ".prefix");
-
       String discordName = event.getMember() != null
           ? event.getMember().getEffectiveName()
           : event.getAuthor().getName();
 
       // Format message (Discord -> Minecraft)
-      String message = "§8[§5Discord§8] " + prefix + " §b" + discordName + " §7» §f"
-          + event.getMessage().getContentDisplay();
+      Component message = ColorUtils.color(
+          "&5&lDiscord&r &b" + discordName + "&r&f: " + event.getMessage().getContentDisplay());
 
       // Send to Minecraft players in that channel
       Bukkit.getScheduler().runTask(ChatChannels.getInstance(), () -> {
