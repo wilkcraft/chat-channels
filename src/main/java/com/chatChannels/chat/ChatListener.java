@@ -8,10 +8,25 @@ import org.bukkit.event.Listener;
 
 import com.chatChannels.ChatChannels;
 import com.chatChannels.discord.DiscordWebhook;
+import com.chatChannels.utils.ColorUtils;
+import com.chatChannels.utils.VaultHook;
+
+import net.kyori.adventure.text.Component;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 
 public class ChatListener implements Listener {
+  private String stripColors(String text) {
+    if (text == null)
+      return "";
+
+    return text
+        .replaceAll("(?i)&?#([0-9A-F]{6})", "") // &#FFFFFF o #FFFFFF
+        .replaceAll("§x(§[0-9A-Fa-f]){6}", "") // formato interno MC
+        .replaceAll("§.", "") // colores §
+        .replaceAll("&[0-9A-FK-ORa-fk-or]", ""); // colores &
+  }
+
   @EventHandler
   public void onChat(AsyncChatEvent event) {
     Player player = event.getPlayer();
@@ -30,12 +45,31 @@ public class ChatListener implements Listener {
       try {
         if (webhookUrl != null && !webhookUrl.isEmpty()) {
           DiscordWebhook webhook = new DiscordWebhook(webhookUrl);
-          webhook.setContent(player.getName() + ": " + plainMessage);
+          String prefix = VaultHook.getPrefix(player);
+          String suffix = VaultHook.getSuffix(player);
+
+          // ❌ QUITAMOS colores de Minecraft para Discord
+          String cleanPrefix = stripColors(prefix);
+          String cleanSuffix = stripColors(suffix);
+
+          String discordMessage = "**" + cleanPrefix + player.getName() + cleanSuffix + "**: " + plainMessage;
+
+          webhook.setContent(discordMessage);
+          webhook.setUsername(player.getName());
+          webhook.setAvatarUrl("https://mc-heads.net/avatar/" + player.getName());
           webhook.execute();
         }
       } catch (Exception e) {
         e.printStackTrace();
       }
+
+      String rawPrefix = VaultHook.getPrefix(player);
+      String rawSuffix = VaultHook.getSuffix(player);
+
+      Component message = ColorUtils.color(
+          rawPrefix + player.getName() + rawSuffix + "&f: " + plainMessage);
+
+      ChannelManager.addMessage(channel, message);
 
       return;
     }
@@ -47,7 +81,6 @@ public class ChatListener implements Listener {
       return;
     }
 
-    String prefix = config.getString("channels." + channel + ".prefix");
     String webhookUrl = config.getString("channels." + channel + ".webhook");
 
     if (channel.equalsIgnoreCase("staff") && !player.isOp()) {
@@ -58,7 +91,19 @@ public class ChatListener implements Listener {
 
     event.setCancelled(true);
 
-    String message = prefix + " " + player.getName() + ": " + plainMessage;
+    // 🔥 BASE (SIN tocar)
+    String rawPrefix = VaultHook.getPrefix(player);
+    String rawSuffix = VaultHook.getSuffix(player);
+
+    // 🧹 Para Discord (sin color)
+    String cleanPrefix = stripColors(rawPrefix);
+    String cleanSuffix = stripColors(rawSuffix);
+
+    // 🧹 Para Minecraft (con color)
+    Component message = ColorUtils.color(
+        rawPrefix + player.getName() + rawSuffix + "&f: " + plainMessage);
+
+    ChannelManager.addMessage(channel, message);
 
     for (Player p : Bukkit.getOnlinePlayers()) {
       if (ChannelManager.getChannel(p).equals(channel)) {
@@ -70,7 +115,12 @@ public class ChatListener implements Listener {
     try {
       if (webhookUrl != null && !webhookUrl.isEmpty()) {
         DiscordWebhook webhook = new DiscordWebhook(webhookUrl);
-        webhook.setContent(player.getName() + ": " + plainMessage);
+
+        String discordMessage = "**" + cleanPrefix + player.getName() + cleanSuffix + "**: " + plainMessage;
+
+        webhook.setContent(discordMessage);
+        webhook.setUsername(player.getName());
+        webhook.setAvatarUrl("https://mc-heads.net/avatar/" + player.getName());
         webhook.execute();
       }
     } catch (Exception e) {
