@@ -48,7 +48,7 @@ public class ChatListener implements Listener {
           String prefix = VaultHook.getPrefix(player);
           String suffix = VaultHook.getSuffix(player);
 
-          // ❌ QUITAMOS colores de Minecraft para Discord
+          // ❌ Remove Minecraft colors for Discord
           String cleanPrefix = stripColors(prefix);
           String cleanSuffix = stripColors(suffix);
 
@@ -74,7 +74,7 @@ public class ChatListener implements Listener {
       return;
     }
 
-    // ❗ resto de canales
+    // ❗ Other channels
     if (!ChannelManager.channelExists(channel)) {
       player.sendMessage("Invalid channel.");
       event.setCancelled(true);
@@ -95,11 +95,11 @@ public class ChatListener implements Listener {
     String rawPrefix = VaultHook.getPrefix(player);
     String rawSuffix = VaultHook.getSuffix(player);
 
-    // 🧹 Para Discord (sin color)
+    // 🧹 Clean for Discord (no color)
     String cleanPrefix = stripColors(rawPrefix);
     String cleanSuffix = stripColors(rawSuffix);
 
-    // 🧹 Para Minecraft (con color)
+    // 🧹 For Minecraft (with color)
     Component message = ColorUtils.color(
         rawPrefix + player.getName() + rawSuffix + "&f: " + plainMessage);
 
